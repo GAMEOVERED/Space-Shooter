@@ -1,49 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class ScoreManager : MonoBehaviour
 {
-    public Text scoreText;
-    public PlayerController playerController;
+    public static ScoreManager Instance;
 
+    public Text scoreText;
     private int score = 0;
-    private bool isPlayerAlive = true;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
-        if (scoreText == null || playerController == null)
-        {
-            Debug.LogError("Assign all UI elements and PlayerController in the inspector!");
-            return;
-        }
-
-       // UpdateScoreText();
-        //StartCoroutine(IncrementScore());
-    }
-
-
-    private void Update()
-    {
         UpdateScoreText();
-        StartCoroutine(IncrementScore());
-    }
-    IEnumerator IncrementScore()
-    {
-        while (isPlayerAlive)
-        {
-            yield return new WaitForSeconds(2f);
-            if (isPlayerAlive)
-            {
-                score += 1;
-                UpdateScoreText();
-            }
-        }
     }
 
-    public void PlayerDied()
+    public void AddScore(int value)
     {
-        isPlayerAlive = false;
+        score += value;
+        UpdateScoreText();
     }
 
     private void UpdateScoreText()
